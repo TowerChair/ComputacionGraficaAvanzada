@@ -1,0 +1,8 @@
+[
+{
+  "directory": "C:/Users/aaron/ComputacionGraficaAvanzada/10-Fog/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DBUILDING_DLL @CMakeFiles/10-Fog.dir/includes_CXX.rsp -g -o CMakeFiles\\10-Fog.dir\\src\\main.obj -c C:\\Users\\aaron\\ComputacionGraficaAvanzada\\10-Fog\\src\\main.cpp",
+  "file": "C:/Users/aaron/ComputacionGraficaAvanzada/10-Fog/src/main.cpp",
+  "output": "CMakeFiles/10-Fog.dir/src/main.obj"
+}
+]
