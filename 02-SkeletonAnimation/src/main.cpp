@@ -90,6 +90,8 @@ Model modelBuzzLeftArm;
 Model modelBuzzLeftForeArm;
 Model modelBuzzLeftHand;
 
+Model spiderModelAnimate;
+
 GLuint textureCespedID, textureWallID, textureWindowID, textureHighwayID, textureLandingPadID;
 GLuint skyboxTextureID;
 
@@ -101,12 +103,12 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
 GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 GL_TEXTURE_CUBE_MAP_NEGATIVE_Z };
 
-std::string fileNames[6] = { "../Textures/mp_bloodvalley/blood-valley_ft.tga",
-		"../Textures/mp_bloodvalley/blood-valley_bk.tga",
-		"../Textures/mp_bloodvalley/blood-valley_up.tga",
-		"../Textures/mp_bloodvalley/blood-valley_dn.tga",
-		"../Textures/mp_bloodvalley/blood-valley_rt.tga",
-		"../Textures/mp_bloodvalley/blood-valley_lf.tga" };
+std::string fileNames[6] = { "../Textures/mar/miramar_ft.tga",
+		"../Textures/mar/miramar_bk.tga",
+		"../Textures/mar/miramar_up.tga",		
+		"../Textures/mar/miramar_dn.tga",
+		"../Textures/mar/miramar_rt.tga",
+		"../Textures/mar/miramar_lf.tga", };
 
 bool exitApp = false;
 int lastMousePosX, offsetX = 0;
@@ -120,6 +122,8 @@ glm::mat4 modelMatrixLambo = glm::mat4(1.0);
 glm::mat4 modelMatrixAircraft = glm::mat4(1.0);
 glm::mat4 modelMatrixDart = glm::mat4(1.0f);
 glm::mat4 modelMatrixBuzz = glm::mat4(1.0f);
+glm::mat4 modelMatrixSpider = glm::mat4(1.0f);
+
 
 float rotDartHead = 0.0, rotDartLeftArm = 0.0, rotDartLeftHand = 0.0, rotDartRightArm = 0.0, rotDartRightHand = 0.0, rotDartLeftLeg = 0.0, rotDartRightLeg = 0.0;
 float rotBuzzHead = 0.0, rotBuzzLeftarm = 0.0, rotBuzzLeftForeArm = 0.0, rotBuzzLeftHand = 0.0;
@@ -174,6 +178,11 @@ double currTime, lastTime;
 // Variables animacion maquina de estados eclipse
 const float avance = 0.1;
 const float giroEclipse = 0.5f;
+
+//Variables animacion spider
+int indexanimateSpider = 0; 
+float advanceSpiderZ = 0.0f;
+
 
 // Se definen todos las funciones.
 void reshapeCallback(GLFWwindow *Window, int widthRes, int heightRes);
@@ -331,6 +340,11 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	modelBuzzLeftForeArm.setShader(&shaderMulLighting);
 	modelBuzzLeftHand.loadModel("../models/buzz/buzzlightyLeftHand.obj");
 	modelBuzzLeftHand.setShader(&shaderMulLighting);
+
+	//Spider
+	spiderModelAnimate.loadModel("../models/spider/animacionSp.fbx");
+	spiderModelAnimate.setShader(&shaderMulLighting);
+
 
 	camera->setPosition(glm::vec3(0.0, 3.0, 4.0));
 	
@@ -748,6 +762,14 @@ bool processInput(bool continueApplication) {
 	else if (modelSelected == 2 && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		modelMatrixBuzz = glm::translate(modelMatrixBuzz, glm::vec3(0.0, 0.0, -0.02));
 
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS){
+		
+		indexanimateSpider= 2; 
+		advanceSpiderZ+=3.0f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_RELEASE){
+		indexanimateSpider = 0; 
+	}
 	glfwPollEvents();
 	return continueApplication;
 }
@@ -1111,6 +1133,14 @@ void applicationLoop() {
 		modelMatrixLeftHand = glm::rotate(modelMatrixLeftHand, glm::radians(-45.0f), glm::vec3(0, 1, 0));
 		modelMatrixLeftHand = glm::translate(modelMatrixLeftHand, glm::vec3(-0.416066, -0.587046, -0.076258));
 		modelBuzzLeftHand.render(modelMatrixLeftHand);
+
+		//custom anim objects
+		glm::mat4 modelMatrixSpiderBody = glm::mat4(modelMatrixSpider);
+		modelMatrixSpiderBody = glm::scale(modelMatrixSpiderBody, glm::vec3(0.01,0.01,0.01));
+		modelMatrixSpiderBody = glm::translate(modelMatrixSpiderBody, glm::vec3(0.0, 0.0, advanceSpiderZ));
+		spiderModelAnimate.setAnimationIndex(indexanimateSpider);
+		spiderModelAnimate.render(modelMatrixSpiderBody);
+
 
 		/*******************************************
 		 * Skybox
